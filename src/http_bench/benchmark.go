@@ -78,6 +78,7 @@ func (app *benchmarkApp) initApp() {
 
 //运行一个curl的对象，并将返回信息返回
 func (app *benchmarkApp) Execute() {
+	start := time.Now().UnixNano()
 	for i := 0; i < app.param.Concurrent; i++ {
 		wk := &worker{}
 		wk.param = app.param
@@ -93,6 +94,9 @@ func (app *benchmarkApp) Execute() {
 	case <-signalChan:
 	case <-time.After(app.param.dur * time.Second):
 	}
+	finish := time.Now().UnixNano()
+	dur := (finish - start)/ 1000000
+	app.param.dur = time.Duration(dur)
 	app.stopApp()
 }
 
@@ -107,10 +111,12 @@ func (app *benchmarkApp) stopApp() {
 }
 
 func (app *benchmarkApp) dispalyResult() {
-	fmt.Printf("qps: %d\n", app.res.total/uint64(app.param.dur))
+	fmt.Println("wbg test result:")
+	fmt.Printf("qps: %.2f request/Second \n", float64(app.res.total) * 1000/float64(app.param.dur))
 	fmt.Printf("total request: %d\n", app.res.total)
+	fmt.Printf("total target urls : %d\n", app.res.total)
+	fmt.Printf("total time :%d ms \n", app.param.dur)
 	fmt.Printf("failed request: : %d\n", app.res.failed)
-	fmt.Printf("total traget urls : %d\n", app.res.total/uint64(app.param.dur))
 }
 
 func (wk *worker) startWorker() {
