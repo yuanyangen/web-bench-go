@@ -6,6 +6,8 @@ import (
 	"io"
 	"math/rand"
 	"os"
+	"net/url"
+	"strings"
 )
 
 type UrlGenerator interface {
@@ -37,20 +39,24 @@ func GetNewFileUrlGenerator(filePath string) *FileUrlGenerator {
 		os.Exit(0)
 	}
 	br := bufio.NewReader(fp)
-	urls := make([]string,0)
+	rawUrls := make([]string,0)
 	for   {
-		url, err := br.ReadString('\n')
+		u, err := br.ReadString('\n')
+		if !strings.Contains("http") {
+			continue
+		}
 		if err == io.EOF {
 			break
 		} else if err != nil {
 			fmt.Println("read file error , please check")
 			os.Exit(0)
 		}
-		urls = append(urls, url)
+		rawUrls = append(rawUrls, u)
 	}
+
 	fg := &FileUrlGenerator{}
-	fg.urls = urls
-	fg.urlSize = len(urls)
+	fg.urls = rawUrls
+	fg.urlSize = len(rawUrls)
 	return fg
 }
 

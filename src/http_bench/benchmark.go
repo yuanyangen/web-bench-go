@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"os"
+	"os/signal"
 )
 
 //对http请求的封装，能够模拟get请求， post请求， 带上cookie
@@ -83,7 +85,14 @@ func (app *benchmarkApp) Execute() {
 	for i := 0; i < app.param.Concurrent; i++ {
 		go app.doOneWorker()
 	}
-	time.Sleep(app.param.Dura * time.Second)
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, os.Interrupt, os.Kill)
+	select {
+	case <- signalChan: {
+	}
+	case <- time.After(app.param.Dura * time.Second) : {
+	}
+	}
 	app.dispalyResult()
 }
 
