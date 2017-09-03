@@ -6,7 +6,6 @@ import (
 	"io"
 	"math/rand"
 	"os"
-	"net/url"
 	"strings"
 )
 
