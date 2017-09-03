@@ -42,7 +42,7 @@ func GetNewFileUrlGenerator(filePath string) *FileUrlGenerator {
 	rawUrls := make([]string,0)
 	for   {
 		u, err := br.ReadString('\n')
-		if !strings.Contains("http") {
+		if !strings.Contains(u,"http") {
 			continue
 		}
 		if err == io.EOF {
