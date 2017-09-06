@@ -113,6 +113,7 @@ func (app *benchmarkApp) stopApp() {
 func (app *benchmarkApp) dispalyResult() {
 	fmt.Println("wbg test result:")
 	fmt.Printf("qps: %.2f request/Second \n", float64(app.res.total) * 1000/float64(app.param.dur))
+	fmt.Printf("avg rt: %.2f ms \n", float64(app.param.dur)* float64(app.param.Concurrent)/float64(app.res.total))
 	fmt.Printf("total request: %d\n", app.res.total)
 	fmt.Printf("total target urls : %d\n", app.res.total)
 	fmt.Printf("total time :%d ms \n", app.param.dur)
