@@ -51,6 +51,7 @@ func GetNewFileUrlGenerator(filePath string) *FileUrlGenerator {
 		if !strings.Contains(u,"http") {
 			continue
 		}
+		u = strings.TrimSuffix(u, "\n")
 		rawUrls = append(rawUrls, u)
 	}
 
