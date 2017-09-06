@@ -33,6 +33,7 @@ type FileUrlGenerator struct {
 
 func GetNewFileUrlGenerator(filePath string) *FileUrlGenerator {
 	fp, err := os.OpenFile(filePath, os.O_RDONLY,0700)
+	defer fp.Close()
 	if err != nil {
 		fmt.Println(filePath + " not exist, please check")
 		os.Exit(0)
@@ -41,14 +42,14 @@ func GetNewFileUrlGenerator(filePath string) *FileUrlGenerator {
 	rawUrls := make([]string,0)
 	for   {
 		u, err := br.ReadString('\n')
-		if !strings.Contains(u,"http") {
-			continue
-		}
 		if err == io.EOF {
 			break
 		} else if err != nil {
 			fmt.Println("read file error , please check")
 			os.Exit(0)
+		}
+		if !strings.Contains(u,"http") {
+			continue
 		}
 		rawUrls = append(rawUrls, u)
 	}
